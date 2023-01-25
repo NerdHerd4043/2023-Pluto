@@ -57,6 +57,10 @@ public class Drivetrain extends SubsystemBase {
     diffDrive.arcadeDrive(fwd, rot, squared_inputs);
   }
 
+  public void stop(){
+    drive(0, 0);
+  }
+
   public void shift(boolean a) {
     shifter.set(a);
   }
