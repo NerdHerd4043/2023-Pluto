@@ -18,9 +18,9 @@ public final class Constants {
     }
 
     public static final class DriveConstants {
-        public static final int backLeftMotorID = 15;
-        public static final int backRightMotorID = 12;
-        public static final int frontLeftMotorID = 11;
+        public static final int backLeftMotorID = 6;
+        public static final int backRightMotorID = 11;
+        public static final int frontLeftMotorID = 8;
         public static final int frontRightMotorID = 13;
 
         public static final boolean currentLimitEnabled = true;
