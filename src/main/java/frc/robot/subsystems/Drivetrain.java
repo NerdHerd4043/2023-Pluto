@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -39,6 +40,11 @@ public class Drivetrain extends SubsystemBase {
 
     backLeftMotor.follow(frontLeftMotor);
     backRightMotor.follow(frontRightMotor);
+
+    frontLeftMotor.setIdleMode(IdleMode.kBrake);
+    frontRightMotor.setIdleMode(IdleMode.kBrake);
+    backLeftMotor.setIdleMode(IdleMode.kBrake);
+    backRightMotor.setIdleMode(IdleMode.kBrake);
 
     diffDrive = new DifferentialDrive(frontLeftMotor, frontRightMotor);
   }
