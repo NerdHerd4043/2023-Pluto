@@ -45,7 +45,7 @@ public final class Constants {
     public static final class AutoConstants {
         public static final double taCenter = 0.425; //ta value that is at the center of the charge station
         public static final double taFarEdge = 0.2; //ta value that is at the far edge of the charge station. Value not final
-        public static final double XFarCenter = 4.55; //X values that are the range of the values that balance the charge plate
-        public static final double XCloseCenter = 4.65;
+        public static final double XFarCenter = 4.5; //X values that are the range of the values that balance the charge plate
+        public static final double XCloseCenter = 4.7;
     }
 }
