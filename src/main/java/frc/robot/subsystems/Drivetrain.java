@@ -4,7 +4,10 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -13,32 +16,25 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.RobotConstants;
 
+interface applyConfig {
+  public void apply(CANSparkMax motorController);
+}
+
 public class Drivetrain extends SubsystemBase {
-  WPI_TalonSRX backLeftMotor = new WPI_TalonSRX(DriveConstants.backLeftMotorID);
-  WPI_TalonSRX backRightMotor = new WPI_TalonSRX(DriveConstants.backRightMotorID);
-  WPI_TalonSRX frontLeftMotor = new WPI_TalonSRX(DriveConstants.frontLeftMotorID);
-  WPI_TalonSRX frontRightMotor = new WPI_TalonSRX(DriveConstants.frontRightMotorID);
+  private CANSparkMax backLeftMotor = new CANSparkMax(DriveConstants.backLeftMotorID, MotorType.kBrushless);
+  private CANSparkMax backRightMotor = new CANSparkMax(DriveConstants.backRightMotorID, MotorType.kBrushless);
+  private CANSparkMax frontLeftMotor = new CANSparkMax(DriveConstants.frontLeftMotorID, MotorType.kBrushless);
+  private CANSparkMax frontRightMotor = new CANSparkMax(DriveConstants.frontRightMotorID, MotorType.kBrushless);
 
-  Solenoid shifter = new Solenoid(RobotConstants.PCMID, PneumaticsModuleType.CTREPCM, DriveConstants.shifterID);
+  private Solenoid shifter = new Solenoid(RobotConstants.PCMID, PneumaticsModuleType.CTREPCM, DriveConstants.shifterID);
 
-  DifferentialDrive diffDrive;
+  private DifferentialDrive diffDrive;
 
   /** Creates a new Drivetrain. */
   public Drivetrain() {
-    backLeftMotor.setSafetyEnabled(false);
-    backRightMotor.setSafetyEnabled(false);
-    frontLeftMotor.setSafetyEnabled(false);
-    frontRightMotor.setSafetyEnabled(false);
-
-    backLeftMotor.enableCurrentLimit(DriveConstants.currentLimitEnabled);
-    backRightMotor.enableCurrentLimit(DriveConstants.currentLimitEnabled);
-    frontLeftMotor.enableCurrentLimit(DriveConstants.currentLimitEnabled);
-    frontRightMotor.enableCurrentLimit(DriveConstants.currentLimitEnabled);
     
-    backLeftMotor.configContinuousCurrentLimit(DriveConstants.currentLimit);
-    backRightMotor.configContinuousCurrentLimit(DriveConstants.currentLimit);
-    frontLeftMotor.configContinuousCurrentLimit(DriveConstants.currentLimit);
-    frontRightMotor.configContinuousCurrentLimit(DriveConstants.currentLimit);
+    applyConfigs((CANSparkMax mc) -> mc.restoreFactoryDefaults());
+    applyConfigs((CANSparkMax mc) -> mc.setSmartCurrentLimit(DriveConstants.currentLimit));
 
     frontLeftMotor.setInverted(true);
     backLeftMotor.setInverted(true);
@@ -46,7 +42,19 @@ public class Drivetrain extends SubsystemBase {
     backLeftMotor.follow(frontLeftMotor);
     backRightMotor.follow(frontRightMotor);
 
+    frontLeftMotor.setIdleMode(IdleMode.kBrake);
+    frontRightMotor.setIdleMode(IdleMode.kBrake);
+    backLeftMotor.setIdleMode(IdleMode.kBrake);
+    backRightMotor.setIdleMode(IdleMode.kBrake);
+
     diffDrive = new DifferentialDrive(frontLeftMotor, frontRightMotor);
+  }
+
+  void applyConfigs(applyConfig config) {
+    config.apply(backLeftMotor);
+    config.apply(backRightMotor);
+    config.apply(frontLeftMotor);
+    config.apply(frontRightMotor);
   }
 
   public void drive(double fwd, double rot) {
@@ -55,6 +63,10 @@ public class Drivetrain extends SubsystemBase {
 
   public void drive(double fwd, double rot, boolean squared_inputs) {
     diffDrive.arcadeDrive(fwd, rot, squared_inputs);
+  }
+
+  public void stop(){
+    drive(0, 0);
   }
 
   public void shift(boolean a) {

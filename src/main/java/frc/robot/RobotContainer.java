@@ -7,10 +7,14 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.AutoConstants;
+import frc.robot.commands.autonomous.*;
 import frc.robot.commands.hatchlatch.Clap;
 import frc.robot.subsystems.CargoIntake;
 import frc.robot.subsystems.Drivetrain;
@@ -29,16 +33,26 @@ public class RobotContainer {
 
   private static XboxController driveStick = new XboxController(0);
 
+  private final DistanceDrive distanceDrive = new DistanceDrive(drivetrain, AutoConstants.taCenter);
+  private final SelfAdjust selfAdjust = new SelfAdjust(drivetrain);
+
+  SendableChooser<Command> commandChooser = new SendableChooser<>();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
 
+    commandChooser.addOption("Balance with Distance", distanceDrive);
+    commandChooser.addOption("Self Adjust on Charge Station", selfAdjust);
+
+    SmartDashboard.putData(commandChooser);
+
     drivetrain.setDefaultCommand(
       new RunCommand(
         () -> drivetrain.drive(
           driveStick.getLeftY(), 
-          -driveStick.getRightX()
+          driveStick.getRightX()
         ),
         drivetrain
       )
@@ -61,13 +75,13 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(driveStick, Button.kX.value).whenPressed(new InstantCommand(hatchLatch::toggleLatch, hatchLatch));
-    new JoystickButton(driveStick, Button.kY.value).whenPressed(new InstantCommand(hatchLatch::toggleExtend, hatchLatch));
-    new JoystickButton(driveStick, Button.kA.value).toggleWhenPressed(new RunCommand(() -> cargoIntake.in(), cargoIntake));
-    new JoystickButton(driveStick, Button.kB.value).toggleWhenPressed(new RunCommand(() -> cargoIntake.out(), cargoIntake));
-    new JoystickButton(driveStick, Button.kLeftBumper.value).whenPressed(new InstantCommand(drivetrain::shiftUp, drivetrain));
-    new JoystickButton(driveStick, Button.kRightBumper.value).whenPressed(new InstantCommand(drivetrain::shiftDown, drivetrain));
-    new JoystickButton(driveStick, Button.kBack.value).toggleWhenPressed(new Clap(hatchLatch));
+    new JoystickButton(driveStick, Button.kX.value).onTrue(new InstantCommand(hatchLatch::toggleLatch, hatchLatch));
+    new JoystickButton(driveStick, Button.kY.value).onTrue(new InstantCommand(hatchLatch::toggleExtend, hatchLatch));
+    new JoystickButton(driveStick, Button.kA.value).toggleOnTrue(new RunCommand(() -> cargoIntake.in(), cargoIntake));
+    new JoystickButton(driveStick, Button.kB.value).toggleOnTrue(new RunCommand(() -> cargoIntake.out(), cargoIntake));
+    new JoystickButton(driveStick, Button.kLeftBumper.value).onTrue(new InstantCommand(drivetrain::shiftUp, drivetrain));
+    new JoystickButton(driveStick, Button.kRightBumper.value).onTrue(new InstantCommand(drivetrain::shiftDown, drivetrain));
+    new JoystickButton(driveStick, Button.kBack.value).toggleOnTrue(new Clap(hatchLatch));
   }
 
   /**
@@ -77,6 +91,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return null;
+    return commandChooser.getSelected();
   }
 }

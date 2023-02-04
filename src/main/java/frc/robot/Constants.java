@@ -18,9 +18,9 @@ public final class Constants {
     }
 
     public static final class DriveConstants {
-        public static final int backLeftMotorID = 15;
-        public static final int backRightMotorID = 12;
-        public static final int frontLeftMotorID = 11;
+        public static final int backLeftMotorID = 6;
+        public static final int backRightMotorID = 11;
+        public static final int frontLeftMotorID = 8;
         public static final int frontRightMotorID = 13;
 
         public static final boolean currentLimitEnabled = true;
@@ -40,5 +40,24 @@ public final class Constants {
 
     public static final class CargoIntakeConstants {
         public static final int conveyorMotorID = 2;
+    }
+
+    public static final class AutoConstants {
+        public static final double taCenter = 0.425; //ta value that is at the center of the charge station
+        public static final double taFarEdge = 0.2; //ta value that is at the far edge of the charge station. Value not final
+        public static final double XFarCenter = 4.5; //X values that are the range of the values that balance the charge plate
+        public static final double XCloseCenter = 4.7;
+    }
+
+    public static final class PIDConstants {
+        public static final double kP = 0;
+        public static final double kI = 0;
+        public static final double kD = 0;
+    }
+
+    public static final class CharacterizationConstants {
+        public static final double kS = 0;
+        public static final double kV = 0;
+        public static final double kA = 0;
     }
 }
