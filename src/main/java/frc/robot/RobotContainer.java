@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
@@ -19,6 +21,7 @@ import frc.robot.commands.hatchlatch.Clap;
 import frc.robot.subsystems.CargoIntake;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.HatchLatch;
+import frc.robot.subsystems.PidDriveSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -30,11 +33,17 @@ public class RobotContainer {
   private final Drivetrain drivetrain = new Drivetrain();
   private final CargoIntake cargoIntake = new CargoIntake();
   private final HatchLatch hatchLatch = new HatchLatch();
+  private final PidDriveSubsystem pid = new PidDriveSubsystem(drivetrain);
 
   private static XboxController driveStick = new XboxController(0);
+  
+  NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
 
   private final DistanceDrive distanceDrive = new DistanceDrive(drivetrain, AutoConstants.taCenter);
   private final SelfAdjust selfAdjust = new SelfAdjust(drivetrain);
+
+  double[] emptyArr = {};
+  private final PidAuto pidAuto = new PidAuto(drivetrain, () -> limelightTable.getEntry("botpose").getDoubleArray(emptyArr)[0]);
 
   SendableChooser<Command> commandChooser = new SendableChooser<>();
 
@@ -45,6 +54,7 @@ public class RobotContainer {
 
     commandChooser.addOption("Balance with Distance", distanceDrive);
     commandChooser.addOption("Self Adjust on Charge Station", selfAdjust);
+    commandChooser.addOption("PID Auto", pidAuto);
 
     SmartDashboard.putData(commandChooser);
 
