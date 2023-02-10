@@ -63,6 +63,10 @@ public class Robot extends TimedRobot {
     smoothed += (input - smoothed) / AutoConstants.smoothConstant;
     SmartDashboard.putNumber("Smoothed", smoothed);
     SmartDashboard.putNumber("Input", input);
+
+    SmartDashboard.putNumber("kP", 0);
+    SmartDashboard.putNumber("kI", 0);
+    SmartDashboard.putNumber("kD", 0);
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

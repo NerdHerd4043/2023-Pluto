@@ -24,10 +24,11 @@ public class PidAuto extends PIDCommand {
   private final Drivetrain drivetrain;
 
   /** Creates a new PidAuto. */
-  public PidAuto(Drivetrain drivetrain, DoubleSupplier xPose) {
+  public PidAuto(Drivetrain drivetrain, DoubleSupplier xPose, DoubleSupplier kP, DoubleSupplier kI, DoubleSupplier kD) {
     super(
         // The controller that the command will use
-        new PIDController(PIDConstants.kP, PIDConstants.kI, PIDConstants.kD),
+        // new PIDController(PIDConstants.kP, PIDConstants.kI, PIDConstants.kD),
+        new PIDController(kP.getAsDouble(), kI.getAsDouble(), kD.getAsDouble()),
         // This should return the measurement
         xPose,
         // This should return the setpoint (can also be a constant)

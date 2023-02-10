@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -30,6 +32,11 @@ import frc.robot.subsystems.PidDriveSubsystem;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
+  private DoubleSupplier kP;
+  private DoubleSupplier kI;
+  private DoubleSupplier kD;
+
   private final Drivetrain drivetrain = new Drivetrain();
   private final CargoIntake cargoIntake = new CargoIntake();
   private final HatchLatch hatchLatch = new HatchLatch();
@@ -43,7 +50,7 @@ public class RobotContainer {
   private final SelfAdjust selfAdjust = new SelfAdjust(drivetrain);
 
   double[] emptyArr = {};
-  private final PidAuto pidAuto = new PidAuto(drivetrain, () -> limelightTable.getEntry("botpose").getDoubleArray(emptyArr)[0]);
+  private final PidAuto pidAuto = new PidAuto(drivetrain, () -> limelightTable.getEntry("botpose").getDoubleArray(emptyArr)[0], kP, kI, kD);
 
   SendableChooser<Command> commandChooser = new SendableChooser<>();
 
