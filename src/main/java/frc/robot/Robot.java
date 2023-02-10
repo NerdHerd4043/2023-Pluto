@@ -23,8 +23,6 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  double emptyArray[] = {};
-
   double smoothed;
 
   NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
@@ -39,7 +37,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    smoothed = limelightTable.getEntry("botpose").getDoubleArray(emptyArray)[0];
+    smoothed = limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0];
   }
 
   /**
@@ -56,17 +54,15 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    SmartDashboard.putNumber("X Position", limelightTable.getEntry("botpose").getDoubleArray(emptyArray)[0]);
+    SmartDashboard.putNumber("X Position", limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0]);
     
-    double input = limelightTable.getEntry("botpose").getDoubleArray(emptyArray)[0];
+    double input = limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0];
 
     smoothed += (input - smoothed) / AutoConstants.smoothConstant;
     SmartDashboard.putNumber("Smoothed", smoothed);
     SmartDashboard.putNumber("Input", input);
 
-    SmartDashboard.putNumber("kP", 0);
-    SmartDashboard.putNumber("kI", 0);
-    SmartDashboard.putNumber("kD", 0);
+    m_robotContainer.updatePIDValues();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

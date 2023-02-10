@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -33,9 +34,9 @@ import frc.robot.subsystems.PidDriveSubsystem;
  */
 public class RobotContainer {
 
-  private DoubleSupplier kP;
-  private DoubleSupplier kI;
-  private DoubleSupplier kD;
+  private double kP;
+  private double kI;
+  private double kD;
 
   private final Drivetrain drivetrain = new Drivetrain();
   private final CargoIntake cargoIntake = new CargoIntake();
@@ -49,8 +50,8 @@ public class RobotContainer {
   private final DistanceDrive distanceDrive = new DistanceDrive(drivetrain, AutoConstants.taCenter);
   private final SelfAdjust selfAdjust = new SelfAdjust(drivetrain);
 
-  double[] emptyArr = {};
-  private final PidAuto pidAuto = new PidAuto(drivetrain, () -> limelightTable.getEntry("botpose").getDoubleArray(emptyArr)[0], kP, kI, kD);
+  private PIDController pidController = new PIDController(kP, kI, kD);
+  private final PidAuto pidAuto = new PidAuto(drivetrain, () -> limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0], pidController);
 
   SendableChooser<Command> commandChooser = new SendableChooser<>();
 
@@ -58,6 +59,10 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+
+    SmartDashboard.putNumber("kP", 0);
+    SmartDashboard.putNumber("kI", 0);
+    SmartDashboard.putNumber("kD", 0);
 
     commandChooser.addOption("Balance with Distance", distanceDrive);
     commandChooser.addOption("Self Adjust on Charge Station", selfAdjust);
@@ -109,5 +114,11 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     return commandChooser.getSelected();
+  }
+
+  public void updatePIDValues() {
+    pidController.setP(SmartDashboard.getNumber("kP", 0));
+    pidController.setI(SmartDashboard.getNumber("kI", 0));
+    pidController.setD(SmartDashboard.getNumber("kD", 0));
   }
 }
