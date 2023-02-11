@@ -37,7 +37,12 @@ public class PidAuto extends PIDCommand {
         output -> {
           // Use the output here
           if(NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0) == 1){
-            drivetrain.drive(-output, 0);
+            if(output >= 0.5){
+              drivetrain.drive(-0.5, 0);
+            }
+            else{
+              drivetrain.drive(-output, 0);
+            }
           }
           SmartDashboard.putNumber("PID Output", output);
         },
