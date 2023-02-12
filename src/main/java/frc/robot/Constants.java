@@ -54,12 +54,12 @@ public final class Constants {
 
         public static final double chargeStationCenter = 4.6;
 
-        public static final double smoothConstant = 30;
+        public static final double smoothConstant = 15;
     }
 
     public static final class PIDConstants {
-        public static final double kP = 2.2;
-        public static final double kI = 0.15;
+        public static final double kP = 2;
+        public static final double kI = 0;
         public static final double kD = 0;
     }
 }

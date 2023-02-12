@@ -6,10 +6,13 @@ package frc.robot;
 
 import java.util.function.DoubleSupplier;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -50,8 +53,14 @@ public class RobotContainer {
   private final DistanceDrive distanceDrive = new DistanceDrive(drivetrain, AutoConstants.taCenter);
   private final SelfAdjust selfAdjust = new SelfAdjust(drivetrain);
 
+  public AHRS gyro = new AHRS(SPI.Port.kMXP);
+
   private PIDController pidController = new PIDController(kP, kI, kD);
-  private final PidAuto pidAuto = new PidAuto(drivetrain, () -> limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0], pidController);
+  private final PidAuto pidAuto = new PidAuto(
+    drivetrain, 
+    () -> limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0],
+    pidController,
+    gyro);
 
   SendableChooser<Command> commandChooser = new SendableChooser<>();
 

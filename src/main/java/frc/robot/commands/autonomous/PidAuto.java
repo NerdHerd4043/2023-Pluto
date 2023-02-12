@@ -6,6 +6,8 @@ package frc.robot.commands.autonomous;
 
 import java.util.function.DoubleSupplier;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -24,7 +26,7 @@ public class PidAuto extends PIDCommand {
   private final Drivetrain drivetrain;
 
   /** Creates a new PidAuto. */
-  public PidAuto(Drivetrain drivetrain, DoubleSupplier xPose, PIDController pidController) {
+  public PidAuto(Drivetrain drivetrain, DoubleSupplier xPose, PIDController pidController, AHRS gyro) {
     super(
         // The controller that the command will use
         // new PIDController(PIDConstants.kP, PIDConstants.kI, PIDConstants.kD),
@@ -37,13 +39,25 @@ public class PidAuto extends PIDCommand {
         output -> {
           // Use the output here
           if(NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0) == 1){
-            if(output >= 0.5){
+            if(gyro.getRoll() <= -6.5 && output > 0){ //this keeps the robot driving backwards when the aprltag comes into veiw
+              drivetrain.drive(0.3, 0);       //When the apriltag comes into view, the output defaults to a high positive number
+            }
+            else if(output >= 0.5){ //speed limit of 0.5
               drivetrain.drive(-0.5, 0);
             }
-            else{
+            else{ //else -> drive like normal
               drivetrain.drive(-output, 0);
             }
           }
+          else if(gyro.getRoll() <= -6.5) //if the tag isn't seen and the charge station is tilted towards it, drive backwards 
+          {
+            drivetrain.drive(0.4, 0);
+          }
+          else { //tag isn't visible on other occasions -> stop robot
+            drivetrain.drive(0, 0);
+          }
+          
+
           SmartDashboard.putNumber("PID Output", output);
         },
         drivetrain);

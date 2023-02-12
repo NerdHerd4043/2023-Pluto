@@ -63,6 +63,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Input", input);
 
     m_robotContainer.updatePIDValues();
+
+    SmartDashboard.putNumber("Roll", m_robotContainer.gyro.getRoll());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
