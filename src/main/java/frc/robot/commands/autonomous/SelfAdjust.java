@@ -38,32 +38,21 @@ public class SelfAdjust extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(SmartDashboard.getNumber("X Position", 0) < AutoConstants.XFarCenter - 0.07){
-          speed = -0.3;
-    }
-    else if(SmartDashboard.getNumber("X Position", 0) < AutoConstants.XFarCenter){
-      speed = -0.2;
-    }
-    else if(SmartDashboard.getNumber("X Position", 0) > AutoConstants.XCloseCenter){
-      speed = 0.2;
-    }
-    else{
-      speed = 0;
-      timerStart = Timer.getFPGATimestamp();
-    }
-
-    // if(NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(emptyArray)[0] < 4.45){
-    //   speed = -0.4;
+    // if(SmartDashboard.getNumber("X Position", 0) < AutoConstants.XFarCenter - 0.07){
+    //       speed = -0.3;
     // }
-    // else if(NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(emptyArray)[0] >= 4.45 && 
-    // NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(emptyArray)[0] <= 4.5){
-    //   speed = -0.15;
+    // else if(SmartDashboard.getNumber("X Position", 0) < AutoConstants.XFarCenter){
+    //   speed = -0.2;
+    // }
+    // else if(SmartDashboard.getNumber("X Position", 0) > AutoConstants.XCloseCenter){
+    //   speed = 0.2;
     // }
     // else{
     //   speed = 0;
+    //   timerStart = Timer.getFPGATimestamp();
     // }
 
-    drivetrain.drive(speed, 0);
+    // drivetrain.drive(speed, 0);
   }
 
   // Called once the command ends or is interrupted.

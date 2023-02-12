@@ -4,7 +4,15 @@
 
 package frc.robot;
 
+import java.util.function.DoubleSupplier;
+
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -19,6 +27,7 @@ import frc.robot.commands.hatchlatch.Clap;
 import frc.robot.subsystems.CargoIntake;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.HatchLatch;
+import frc.robot.subsystems.PidDriveSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -27,14 +36,31 @@ import frc.robot.subsystems.HatchLatch;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
+  private double kP;
+  private double kI;
+  private double kD;
+
   private final Drivetrain drivetrain = new Drivetrain();
   private final CargoIntake cargoIntake = new CargoIntake();
   private final HatchLatch hatchLatch = new HatchLatch();
+  private final PidDriveSubsystem pid = new PidDriveSubsystem(drivetrain);
 
   private static XboxController driveStick = new XboxController(0);
+  
+  NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
 
   private final DistanceDrive distanceDrive = new DistanceDrive(drivetrain, AutoConstants.taCenter);
   private final SelfAdjust selfAdjust = new SelfAdjust(drivetrain);
+
+  public AHRS gyro = new AHRS(SPI.Port.kMXP);
+
+  private PIDController pidController = new PIDController(kP, kI, kD);
+  private final PidAuto pidAuto = new PidAuto(
+    drivetrain, 
+    () -> limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0],
+    pidController,
+    gyro);
 
   SendableChooser<Command> commandChooser = new SendableChooser<>();
 
@@ -43,8 +69,13 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
+    SmartDashboard.putNumber("kP", 0);
+    SmartDashboard.putNumber("kI", 0);
+    SmartDashboard.putNumber("kD", 0);
+
     commandChooser.addOption("Balance with Distance", distanceDrive);
     commandChooser.addOption("Self Adjust on Charge Station", selfAdjust);
+    commandChooser.addOption("PID Auto", pidAuto);
 
     SmartDashboard.putData(commandChooser);
 
@@ -92,5 +123,11 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     return commandChooser.getSelected();
+  }
+
+  public void updatePIDValues() {
+    pidController.setP(SmartDashboard.getNumber("kP", 0));
+    pidController.setI(SmartDashboard.getNumber("kI", 0));
+    pidController.setD(SmartDashboard.getNumber("kD", 0));
   }
 }
