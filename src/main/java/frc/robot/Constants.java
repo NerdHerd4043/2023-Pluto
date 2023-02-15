@@ -29,10 +29,6 @@ public final class Constants {
         public static final int shifterID = 4;
 
         public static final boolean lowGear = false;
-
-        public static final double kS = 0;
-        public static final double kV = 0;
-        public static final double kA = 0;
     }
 
     public static final class HatchLatchConstants {
@@ -48,11 +44,9 @@ public final class Constants {
 
     public static final class AutoConstants {
         public static final double taCenter = 0.425; //ta value that is at the center of the charge station
-        public static final double taFarEdge = 0.2; //ta value that is at the far edge of the charge station. Value not final
-        public static final double XFarCenter = 4.5; //X values that are the range of the values that balance the charge plate
-        public static final double XCloseCenter = 4.7;
 
-        public static final double chargeStationCenter = 4.6;
+        public static final double chargeStationCenterPose = 4.6; //X position of the center of the charge station
+        public static final double outsideCommunityPose = 5.2; //X position of being outside the community
 
         public static final double smoothConstant = 15;
     }
