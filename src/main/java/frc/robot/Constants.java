@@ -46,7 +46,7 @@ public final class Constants {
         public static final double taCenter = 0.425; //ta value that is at the center of the charge station
 
         public static final double chargeStationCenterPose = 4.6; //X position of the center of the charge station
-        public static final double outsideCommunityPose = 5.2; //X position of being outside the community
+        public static final double outsideCommunityPose = 3; //X position of being outside the community
 
         public static final double smoothConstant = 15;
     }

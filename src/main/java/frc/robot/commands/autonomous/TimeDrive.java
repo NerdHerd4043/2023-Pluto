@@ -34,7 +34,7 @@ public class TimeDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivetrain.drive(speed, 0);
+    drivetrain.drive(-speed, 0);
   }
 
   // Called once the command ends or is interrupted.

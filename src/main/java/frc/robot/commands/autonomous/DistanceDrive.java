@@ -42,6 +42,6 @@ public class DistanceDrive extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new Double[0])[0] >= endpoint;
+    return NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new Double[0])[0] <= endpoint;
   }
 }

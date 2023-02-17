@@ -75,8 +75,8 @@ public class PidBalance extends PIDCommand {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(gyro.getRoll() >= 0 && gyro.getRoll() <= 2 &&
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new Double[0])[0] <= 4.8)
+    if(gyro.getRoll() >= 0.5 && gyro.getRoll() <= 2.2 &&
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new Double[0])[0] >= 4)
     {
       if(firstCheck){
         timerStart = Timer.getFPGATimestamp();

@@ -52,6 +52,7 @@ public class RobotContainer {
 
   // private final DistanceDrive distanceDrive = new DistanceDrive(drivetrain, 0.3, AutoConstants.taCenter);
   private final DistanceDrive leaveCommunity = new DistanceDrive(drivetrain, -0.6, AutoConstants.outsideCommunityPose);
+  private final TimeDrive leaveCommunityTimed = new TimeDrive(drivetrain, -0.6, 4);
   private final PidBalance pidBalance = new PidBalance(
     drivetrain, 
     () -> limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0],
@@ -72,6 +73,7 @@ public class RobotContainer {
     // commandChooser.addOption("Balance with Distance", distanceDrive);
     commandChooser.addOption("Leave the Community", leaveCommunity);
     commandChooser.addOption("Balance with PID", pidBalance);
+    commandChooser.addOption("Leave Community on Timer", leaveCommunityTimed);
 
     SmartDashboard.putData(commandChooser);
 
