@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import java.util.function.DoubleSupplier;
-
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -22,12 +20,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.commands.autonomous.*;
+import frc.robot.commands.auto.BalanceOnPlatform;
+import frc.robot.commands.autoCommands.*;
 import frc.robot.commands.hatchlatch.Clap;
 import frc.robot.subsystems.CargoIntake;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.HatchLatch;
-import frc.robot.subsystems.PidDriveSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -44,23 +42,23 @@ public class RobotContainer {
   private final Drivetrain drivetrain = new Drivetrain();
   private final CargoIntake cargoIntake = new CargoIntake();
   private final HatchLatch hatchLatch = new HatchLatch();
-  private final PidDriveSubsystem pid = new PidDriveSubsystem(drivetrain);
+
+  public AHRS gyro = new AHRS(SPI.Port.kMXP);
+
+  private PIDController pidController = new PIDController(kP, kI, kD);
 
   private static XboxController driveStick = new XboxController(0);
   
   NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
 
-  private final DistanceDrive distanceDrive = new DistanceDrive(drivetrain, AutoConstants.taCenter);
-  private final SelfAdjust selfAdjust = new SelfAdjust(drivetrain);
+  // private final DistanceDrive distanceDrive = new DistanceDrive(drivetrain, 0.3, AutoConstants.taCenter);
+  private final DistanceDrive leaveCommunity = new DistanceDrive(drivetrain, -0.6, AutoConstants.outsideCommunityPose);
+  private final TimeDrive leaveCommunityTimed = new TimeDrive(drivetrain, -0.6, 4);
+  private final PidBalance pidBalance = new PidBalance(
+    drivetrain, pidController, gyro,
+    () -> Math.abs(limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0]));
 
-  public AHRS gyro = new AHRS(SPI.Port.kMXP);
-
-  private PIDController pidController = new PIDController(kP, kI, kD);
-  private final PidAuto pidAuto = new PidAuto(
-    drivetrain, 
-    () -> limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0],
-    pidController,
-    gyro);
+  private final BalanceOnPlatform balanceOnPlatform = new BalanceOnPlatform(drivetrain, pidController, gyro);
 
   SendableChooser<Command> commandChooser = new SendableChooser<>();
 
@@ -73,9 +71,11 @@ public class RobotContainer {
     SmartDashboard.putNumber("kI", 0);
     SmartDashboard.putNumber("kD", 0);
 
-    commandChooser.addOption("Balance with Distance", distanceDrive);
-    commandChooser.addOption("Self Adjust on Charge Station", selfAdjust);
-    commandChooser.addOption("PID Auto", pidAuto);
+    // commandChooser.addOption("Balance with Distance", distanceDrive);
+    // commandChooser.addOption("Leave the Community", leaveCommunity);
+    commandChooser.addOption("Balance with PID", pidBalance);
+    commandChooser.addOption("Leave the Community", leaveCommunityTimed);
+    commandChooser.addOption("Leave Community and Balance", balanceOnPlatform);
 
     SmartDashboard.putData(commandChooser);
 

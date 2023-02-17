@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.autonomous;
+package frc.robot.commands.autoCommands;
 
 import java.util.function.DoubleSupplier;
 
@@ -10,23 +10,26 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.PIDConstants;
 import frc.robot.subsystems.Drivetrain;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class PidAuto extends PIDCommand {
+public class PidBalance extends PIDCommand {
   
   private final Drivetrain drivetrain;
+  private final AHRS gyro;
+  private double timerStart = 0;
+  private double timerEnd = 1;
+  private boolean firstCheck = true;
 
   /** Creates a new PidAuto. */
-  public PidAuto(Drivetrain drivetrain, DoubleSupplier xPose, PIDController pidController, AHRS gyro) {
+  public PidBalance(Drivetrain drivetrain, PIDController pidController, AHRS gyro, DoubleSupplier xPose) {
     super(
         // The controller that the command will use
         // new PIDController(PIDConstants.kP, PIDConstants.kI, PIDConstants.kD),
@@ -34,7 +37,7 @@ public class PidAuto extends PIDCommand {
         // This should return the measurement
         xPose,
         // This should return the setpoint (can also be a constant)
-        () -> AutoConstants.chargeStationCenter,
+        () -> AutoConstants.chargeStationCenterPose,
         // This uses the output
         output -> {
           // Use the output here
@@ -57,12 +60,13 @@ public class PidAuto extends PIDCommand {
             drivetrain.drive(0, 0);
           }
           
-
           SmartDashboard.putNumber("PID Output", output);
         },
         drivetrain);
 
     this.drivetrain = drivetrain;
+    this.gyro = gyro;
+    // this.timerStart = 0;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.drivetrain);
     // Configure additional PID options by calling `getController` here.
@@ -71,6 +75,18 @@ public class PidAuto extends PIDCommand {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if(gyro.getRoll() >= 0.5 && gyro.getRoll() <= 2.2 &&
+    Math.abs(NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new Double[0])[0]) >= 4)
+    {
+      if(firstCheck){
+        timerStart = Timer.getFPGATimestamp();
+        firstCheck = false;
+      }
+      return (Timer.getFPGATimestamp() - timerStart) > timerEnd;
+    }
+    else{
+      firstCheck = true;
+      return false;
+    }
   }
 }
