@@ -20,7 +20,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.commands.autonomous.*;
+import frc.robot.commands.auto.BalanceOnPlatform;
+import frc.robot.commands.autoCommands.*;
 import frc.robot.commands.hatchlatch.Clap;
 import frc.robot.subsystems.CargoIntake;
 import frc.robot.subsystems.Drivetrain;
@@ -54,10 +55,10 @@ public class RobotContainer {
   private final DistanceDrive leaveCommunity = new DistanceDrive(drivetrain, -0.6, AutoConstants.outsideCommunityPose);
   private final TimeDrive leaveCommunityTimed = new TimeDrive(drivetrain, -0.6, 4);
   private final PidBalance pidBalance = new PidBalance(
-    drivetrain, 
-    () -> limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0],
-    pidController,
-    gyro);
+    drivetrain, pidController, gyro,
+    () -> Math.abs(limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0]));
+
+  private final BalanceOnPlatform balanceOnPlatform = new BalanceOnPlatform(drivetrain, pidController, gyro);
 
   SendableChooser<Command> commandChooser = new SendableChooser<>();
 
@@ -71,9 +72,10 @@ public class RobotContainer {
     SmartDashboard.putNumber("kD", 0);
 
     // commandChooser.addOption("Balance with Distance", distanceDrive);
-    commandChooser.addOption("Leave the Community", leaveCommunity);
+    // commandChooser.addOption("Leave the Community", leaveCommunity);
     commandChooser.addOption("Balance with PID", pidBalance);
-    commandChooser.addOption("Leave Community on Timer", leaveCommunityTimed);
+    commandChooser.addOption("Leave the Community", leaveCommunityTimed);
+    commandChooser.addOption("Leave Community and Balance", balanceOnPlatform);
 
     SmartDashboard.putData(commandChooser);
 
