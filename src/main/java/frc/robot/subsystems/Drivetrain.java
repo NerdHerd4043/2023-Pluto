@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.DriveConstants;
@@ -79,6 +80,22 @@ public class Drivetrain extends SubsystemBase {
 
   public void shiftDown() {
     shift(DriveConstants.lowGear);
+  }
+
+  public void setBreakMode(){
+    frontLeftMotor.setIdleMode(IdleMode.kBrake);
+    backLeftMotor.setIdleMode(IdleMode.kBrake);
+    frontRightMotor.setIdleMode(IdleMode.kBrake);
+    backRightMotor.setIdleMode(IdleMode.kBrake);
+    SmartDashboard.putString("Motor Mode", "Brake");
+  }
+
+  public void setCoastMode(){
+    frontLeftMotor.setIdleMode(IdleMode.kCoast);
+    backLeftMotor.setIdleMode(IdleMode.kCoast);
+    frontRightMotor.setIdleMode(IdleMode.kCoast);
+    backRightMotor.setIdleMode(IdleMode.kCoast);
+    SmartDashboard.putString("Motor Mode", "Coast");
   }
 
   @Override

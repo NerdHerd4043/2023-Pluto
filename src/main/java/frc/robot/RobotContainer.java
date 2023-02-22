@@ -112,7 +112,10 @@ public class RobotContainer {
     new JoystickButton(driveStick, Button.kB.value).toggleOnTrue(new RunCommand(() -> cargoIntake.out(), cargoIntake));
     new JoystickButton(driveStick, Button.kLeftBumper.value).onTrue(new InstantCommand(drivetrain::shiftUp, drivetrain));
     new JoystickButton(driveStick, Button.kRightBumper.value).onTrue(new InstantCommand(drivetrain::shiftDown, drivetrain));
-    new JoystickButton(driveStick, Button.kBack.value).toggleOnTrue(new Clap(hatchLatch));
+    // new JoystickButton(driveStick, Button.kBack.value).toggleOnTrue(new Clap(hatchLatch));
+
+    new JoystickButton(driveStick, Button.kStart.value).onTrue(getBreakCommand());
+    new JoystickButton(driveStick, Button.kBack.value).onTrue(getCoastCommand());
   }
 
   /**
@@ -130,4 +133,13 @@ public class RobotContainer {
     pidController.setI(SmartDashboard.getNumber("kI", 0));
     pidController.setD(SmartDashboard.getNumber("kD", 0));
   }
+
+  public Command getCoastCommand(){
+    return new InstantCommand(drivetrain::setCoastMode);
+  }
+
+  public Command getBreakCommand(){
+    return new InstantCommand(drivetrain::setBreakMode);
+  }
+
 }

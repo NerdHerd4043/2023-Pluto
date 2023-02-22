@@ -25,7 +25,7 @@ public class Robot extends TimedRobot {
 
   double smoothed;
 
-  NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+  // NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    smoothed = limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0];
+    // smoothed = limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0];
   }
 
   /**
@@ -54,22 +54,24 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    SmartDashboard.putNumber("X Position", limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0]);
+    // SmartDashboard.putNumber("X Position", limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0]);
     
-    double input = limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0];
+    // double input = limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0];
 
-    smoothed += (input - smoothed) / AutoConstants.smoothConstant;
-    SmartDashboard.putNumber("Smoothed", smoothed);
-    SmartDashboard.putNumber("Input", input);
+    // smoothed += (input - smoothed) / AutoConstants.smoothConstant;
+    // SmartDashboard.putNumber("Smoothed", smoothed);
+    // SmartDashboard.putNumber("Input", input);
 
-    m_robotContainer.updatePIDValues();
+    // m_robotContainer.updatePIDValues();
 
-    SmartDashboard.putNumber("Roll", m_robotContainer.gyro.getRoll());
+    // SmartDashboard.putNumber("Roll", m_robotContainer.gyro.getRoll());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    m_robotContainer.getBreakCommand().schedule();
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -83,7 +85,7 @@ public class Robot extends TimedRobot {
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+      m_robotContainer.getCoastCommand().andThen(m_autonomousCommand).schedule();
     }
   }
 
@@ -103,6 +105,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    m_robotContainer.getCoastCommand().schedule();
   }
 
   /** This function is called periodically during operator control. */
