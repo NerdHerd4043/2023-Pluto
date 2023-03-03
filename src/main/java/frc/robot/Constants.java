@@ -56,4 +56,9 @@ public final class Constants {
         public static final double kI = 0;
         public static final double kD = 0.01;
     }
+
+    public static final class ArmConstants {
+        public static final int lowerArmMotorID = 20;
+        public static final int upperArmMotorID = 1;
+    }
 }

@@ -23,6 +23,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.auto.BalanceOnPlatform;
 import frc.robot.commands.autoCommands.*;
 import frc.robot.commands.hatchlatch.Clap;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.CargoIntake;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.HatchLatch;
@@ -42,6 +43,7 @@ public class RobotContainer {
   private final Drivetrain drivetrain = new Drivetrain();
   private final CargoIntake cargoIntake = new CargoIntake();
   private final HatchLatch hatchLatch = new HatchLatch();
+  private final Arm arm = new Arm();
 
   public AHRS gyro = new AHRS(SPI.Port.kMXP);
 
@@ -79,15 +81,23 @@ public class RobotContainer {
 
     SmartDashboard.putData(commandChooser);
 
-    drivetrain.setDefaultCommand(
-      new RunCommand(
-        () -> drivetrain.drive(
-          driveStick.getLeftY(), 
-          driveStick.getRightX()
-        ),
-        drivetrain
-      )
-    );
+    // drivetrain.setDefaultCommand(
+    //   new RunCommand(
+    //     () -> drivetrain.drive(
+    //       driveStick.getLeftY(), 
+    //       driveStick.getRightX()
+    //     ),
+    //     drivetrain
+    //   )
+    // );
+
+    arm.setDefaultCommand(
+      arm.driveLowerMotor(
+        () -> driveStick.getLeftY()));
+    
+    arm.setDefaultCommand(
+      arm.driveUpperMotor(
+        () -> driveStick.getRightY()));
 
     cargoIntake.setDefaultCommand(
       new RunCommand(
