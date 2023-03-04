@@ -92,12 +92,10 @@ public class RobotContainer {
     // );
 
     arm.setDefaultCommand(
-      arm.driveLowerMotor(
-        () -> driveStick.getLeftY()));
-    
-    arm.setDefaultCommand(
-      arm.driveUpperMotor(
+      arm.driveMotors(
+        () -> driveStick.getLeftY(),
         () -> driveStick.getRightY()));
+
 
     cargoIntake.setDefaultCommand(
       new RunCommand(

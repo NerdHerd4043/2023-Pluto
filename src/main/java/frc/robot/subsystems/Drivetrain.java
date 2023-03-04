@@ -23,9 +23,9 @@ interface applyConfig {
 
 public class Drivetrain extends SubsystemBase {
   private CANSparkMax backLeftMotor = new CANSparkMax(DriveConstants.backLeftMotorID, MotorType.kBrushless);
-  private CANSparkMax backRightMotor = new CANSparkMax(DriveConstants.backRightMotorID, MotorType.kBrushless);
+  // private CANSparkMax backRightMotor = new CANSparkMax(DriveConstants.backRightMotorID, MotorType.kBrushless);
   private CANSparkMax frontLeftMotor = new CANSparkMax(DriveConstants.frontLeftMotorID, MotorType.kBrushless);
-  private CANSparkMax frontRightMotor = new CANSparkMax(DriveConstants.frontRightMotorID, MotorType.kBrushless);
+  // private CANSparkMax frontRightMotor = new CANSparkMax(DriveConstants.frontRightMotorID, MotorType.kBrushless);
 
   private Solenoid shifter = new Solenoid(RobotConstants.PCMID, PneumaticsModuleType.CTREPCM, DriveConstants.shifterID);
 
@@ -41,21 +41,21 @@ public class Drivetrain extends SubsystemBase {
     backLeftMotor.setInverted(true);
 
     backLeftMotor.follow(frontLeftMotor);
-    backRightMotor.follow(frontRightMotor);
+    // backRightMotor.follow(frontRightMotor);
 
     frontLeftMotor.setIdleMode(IdleMode.kBrake);
-    frontRightMotor.setIdleMode(IdleMode.kBrake);
+    // frontRightMotor.setIdleMode(IdleMode.kBrake);
     backLeftMotor.setIdleMode(IdleMode.kBrake);
-    backRightMotor.setIdleMode(IdleMode.kBrake);
+    // backRightMotor.setIdleMode(IdleMode.kBrake);
 
-    diffDrive = new DifferentialDrive(frontLeftMotor, frontRightMotor);
+    // diffDrive = new DifferentialDrive(frontLeftMotor, frontRightMotor);
   }
 
   void applyConfigs(applyConfig config) {
     config.apply(backLeftMotor);
-    config.apply(backRightMotor);
+    // config.apply(backRightMotor);
     config.apply(frontLeftMotor);
-    config.apply(frontRightMotor);
+    // config.apply(frontRightMotor);
   }
 
   public void drive(double fwd, double rot) {
@@ -85,16 +85,16 @@ public class Drivetrain extends SubsystemBase {
   public void setBreakMode(){
     frontLeftMotor.setIdleMode(IdleMode.kBrake);
     backLeftMotor.setIdleMode(IdleMode.kBrake);
-    frontRightMotor.setIdleMode(IdleMode.kBrake);
-    backRightMotor.setIdleMode(IdleMode.kBrake);
+    // frontRightMotor.setIdleMode(IdleMode.kBrake);
+    // backRightMotor.setIdleMode(IdleMode.kBrake);
     SmartDashboard.putString("Motor Mode", "Brake");
   }
 
   public void setCoastMode(){
     frontLeftMotor.setIdleMode(IdleMode.kCoast);
     backLeftMotor.setIdleMode(IdleMode.kCoast);
-    frontRightMotor.setIdleMode(IdleMode.kCoast);
-    backRightMotor.setIdleMode(IdleMode.kCoast);
+    // frontRightMotor.setIdleMode(IdleMode.kCoast);
+    // backRightMotor.setIdleMode(IdleMode.kCoast);
     SmartDashboard.putString("Motor Mode", "Coast");
   }
 

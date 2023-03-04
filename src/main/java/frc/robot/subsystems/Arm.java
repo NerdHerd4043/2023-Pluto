@@ -25,15 +25,19 @@ public class Arm extends SubsystemBase {
     upperArmMotor.restoreFactoryDefaults();
 
     lowerArmMotor.setIdleMode(IdleMode.kBrake);
-    upperArmMotor.setIdleMode(IdleMode.kBrake);
+    upperArmMotor.setIdleMode(IdleMode.kCoast);
   }
 
-  public CommandBase driveLowerMotor(DoubleSupplier speed){
-    return this.run(() -> lowerArmMotor.set(speed.getAsDouble() * 0.3));
-  }
+  public CommandBase driveMotors(DoubleSupplier speed, DoubleSupplier speed2){
+    return this.run(() -> {
+      lowerArmMotor.set(speed.getAsDouble() * 0.4);
+      upperArmMotor.set(speed2.getAsDouble() * 0.2);
+    });
+  } 
 
-  public CommandBase driveUpperMotor(DoubleSupplier speed){
-    return this.run(() -> upperArmMotor.set(speed.getAsDouble() * 0.3));
+  public void setSpeeds(double lowerMotorSpeed, double upperMotorSpeed) {
+    lowerArmMotor.set(lowerMotorSpeed);
+    upperArmMotor.set(upperMotorSpeed);
   }
 
   @Override
