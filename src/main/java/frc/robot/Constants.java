@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import cowlib.arm.ArmPose;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -51,14 +53,50 @@ public final class Constants {
         public static final double smoothConstant = 15;
     }
 
-    public static final class PIDConstants {
+    public static final class AutoPIDConstants {
         public static final double kP = 2;
         public static final double kI = 0;
         public static final double kD = 0.01;
     }
 
-    public static final class ArmConstants {
+    public static class ArmConstants {
         public static final int lowerArmMotorID = 15;
-        public static final int upperArmMotorID = 25;
-    }
+        public static final int upperArmMotorID = 1;
+    
+        public static final int lowerArmEncoderID = 0;
+        public static final int upperArmEncoderID = 1;
+    
+        public static final ArmPose[] poses = new ArmPose[] {
+          new ArmPose(0, 0),
+          new ArmPose(5, 5),
+          new ArmPose(15, 20)
+        };
+    
+        public static class PID {
+          public static class Upper{
+            public static final double kP = 0;
+            public static final double kI = 0;
+            public static final double kD = 0;
+          }
+          public static class Lower{
+            public static final double kP = 0;
+            public static final double kI = 0;
+            public static final double kD = 0;
+          }
+        }
+    
+        public static class FeedForward {
+          public static class Upper{
+            public static final double ks = 0;
+            public static final double kv = 0;
+            public static final double ka = 0;
+          }
+          public static class Lower{
+            public static final double ks = 0;
+            public static final double kv = 0;
+            public static final double ka = 0;
+          }
+        }
+      }
+    
 }

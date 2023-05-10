@@ -12,13 +12,12 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.auto.BalanceOnPlatform;
 import frc.robot.commands.autoCommands.*;
@@ -49,7 +48,8 @@ public class RobotContainer {
 
   private PIDController pidController = new PIDController(kP, kI, kD);
 
-  private static XboxController driveStick = new XboxController(0);
+  // private static XboxController driveStick = new XboxController(0);
+  private static CommandXboxController driveStick = new CommandXboxController(0);
   
   NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
 
@@ -96,15 +96,19 @@ public class RobotContainer {
         () -> driveStick.getLeftY(),
         () -> driveStick.getRightY()));
 
+    // arm.setDefaultCommand(
+    //   arm.adjustCommand(
+    //     () -> driveStick.getRightTriggerAxis() - driveStick.getLeftTriggerAxis()
+    //   ));
 
-    cargoIntake.setDefaultCommand(
-      new RunCommand(
-        () -> cargoIntake.set(
-          driveStick.getRightTriggerAxis(), 
-          driveStick.getLeftTriggerAxis()
-        ), 
-        cargoIntake)
-    );
+    // cargoIntake.setDefaultCommand(
+    //   new RunCommand(
+    //     () -> cargoIntake.set(
+    //       driveStick.getRightTriggerAxis(), 
+    //       driveStick.getLeftTriggerAxis()
+    //     ), 
+    //     cargoIntake)
+    // );
   }
 
   /**
@@ -114,16 +118,20 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(driveStick, Button.kX.value).onTrue(new InstantCommand(hatchLatch::toggleLatch, hatchLatch));
-    new JoystickButton(driveStick, Button.kY.value).onTrue(new InstantCommand(hatchLatch::toggleExtend, hatchLatch));
-    new JoystickButton(driveStick, Button.kA.value).toggleOnTrue(new RunCommand(() -> cargoIntake.in(), cargoIntake));
-    new JoystickButton(driveStick, Button.kB.value).toggleOnTrue(new RunCommand(() -> cargoIntake.out(), cargoIntake));
-    new JoystickButton(driveStick, Button.kLeftBumper.value).onTrue(new InstantCommand(drivetrain::shiftUp, drivetrain));
-    new JoystickButton(driveStick, Button.kRightBumper.value).onTrue(new InstantCommand(drivetrain::shiftDown, drivetrain));
+    driveStick.a().onTrue(new InstantCommand(arm::nextPose, arm));
+    driveStick.b().onTrue(new InstantCommand(arm::previousPose, arm));
+
+
+    // new JoystickButton(driveStick, Button.kX.value).onTrue(new InstantCommand(hatchLatch::toggleLatch, hatchLatch));
+    // new JoystickButton(driveStick, Button.kY.value).onTrue(new InstantCommand(hatchLatch::toggleExtend, hatchLatch));
+    // new JoystickButton(driveStick, Button.kA.value).toggleOnTrue(new RunCommand(() -> cargoIntake.in(), cargoIntake));
+    // new JoystickButton(driveStick, Button.kB.value).toggleOnTrue(new RunCommand(() -> cargoIntake.out(), cargoIntake));
+    // new JoystickButton(driveStick, Button.kLeftBumper.value).onTrue(new InstantCommand(drivetrain::shiftUp, drivetrain));
+    // new JoystickButton(driveStick, Button.kRightBumper.value).onTrue(new InstantCommand(drivetrain::shiftDown, drivetrain));
     // new JoystickButton(driveStick, Button.kBack.value).toggleOnTrue(new Clap(hatchLatch));
 
-    new JoystickButton(driveStick, Button.kStart.value).onTrue(getBreakCommand());
-    new JoystickButton(driveStick, Button.kBack.value).onTrue(getCoastCommand());
+    // new JoystickButton(driveStick, Button.kStart.value).onTrue(getBreakCommand());
+    // new JoystickButton(driveStick, Button.kBack.value).onTrue(getCoastCommand());
   }
 
   /**
