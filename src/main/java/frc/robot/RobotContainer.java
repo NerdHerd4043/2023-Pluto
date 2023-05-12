@@ -118,8 +118,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    driveStick.a().onTrue(new InstantCommand(arm::nextPose, arm));
-    driveStick.b().onTrue(new InstantCommand(arm::previousPose, arm));
+    driveStick.b().onTrue(new InstantCommand(arm::nextPose, arm));
+    driveStick.a().onTrue(new InstantCommand(arm::previousPose, arm));
+    driveStick.y().onTrue(new InstantCommand(arm::printEncoders, arm));
 
 
     // new JoystickButton(driveStick, Button.kX.value).onTrue(new InstantCommand(hatchLatch::toggleLatch, hatchLatch));

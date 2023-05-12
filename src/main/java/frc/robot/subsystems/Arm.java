@@ -123,6 +123,12 @@ public class Arm extends DualProfiledPIDSubsystem {
     setGoals(poses[(int)pose].lower(), poses[(int)pose].upper());
   }
 
+  public void printEncoders() {
+    SmartDashboard.putString("Encoder Values", 
+    "Lower: " + lowerArmEncoder.getAbsolutePosition() +
+    ", Upper: " + upperArmEncoder.getAbsolutePosition());
+  }
+
   @Override
   public void useOutput(double outputLower, double outputUpper, State setpointLower, State setpointUpper) {
     // lowerArmMotor.setVoltage(outputLower);
@@ -140,10 +146,11 @@ public class Arm extends DualProfiledPIDSubsystem {
     }
   }
 
-  public void printEncoders() {
-    SmartDashboard.putString("Encoder Values", 
-    "Lower: " + lowerArmEncoder.getAbsolutePosition() +
-    ", Upper: " + upperArmEncoder.getAbsolutePosition());
+  @Override
+  public void periodic() {
+    System.out.println(
+      "Lower: " + lowerArmEncoder.getAbsolutePosition() +
+      ", Upper: " + upperArmEncoder.getAbsolutePosition());
   }
 
   public CommandBase driveMotors(DoubleSupplier speed, DoubleSupplier speed2){
