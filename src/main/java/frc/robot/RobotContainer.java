@@ -69,9 +69,9 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    SmartDashboard.putNumber("kP", 0);
-    SmartDashboard.putNumber("kI", 0);
-    SmartDashboard.putNumber("kD", 0);
+    // SmartDashboard.putNumber("kP", 0);
+    // SmartDashboard.putNumber("kI", 0);
+    // SmartDashboard.putNumber("kD", 0);
 
     // commandChooser.addOption("Balance with Distance", distanceDrive);
     // commandChooser.addOption("Leave the Community", leaveCommunity);
@@ -79,7 +79,7 @@ public class RobotContainer {
     commandChooser.addOption("Leave the Community", leaveCommunityTimed);
     commandChooser.addOption("Leave Community and Balance", balanceOnPlatform);
 
-    SmartDashboard.putData(commandChooser);
+    // SmartDashboard.putData(commandChooser);
 
     // drivetrain.setDefaultCommand(
     //   new RunCommand(
@@ -91,15 +91,15 @@ public class RobotContainer {
     //   )
     // );
 
-    arm.setDefaultCommand(
-      arm.driveMotors(
-        () -> driveStick.getLeftY(),
-        () -> driveStick.getRightY()));
-
     // arm.setDefaultCommand(
-    //   arm.adjustCommand(
-    //     () -> driveStick.getRightTriggerAxis() - driveStick.getLeftTriggerAxis()
-    //   ));
+    //   arm.driveMotors(
+    //     () -> driveStick.getLeftY(),
+    //     () -> driveStick.getRightY()));
+
+    arm.setDefaultCommand(
+      arm.adjustCommand(
+        () -> driveStick.getRightTriggerAxis() - driveStick.getLeftTriggerAxis()
+      ));
 
     // cargoIntake.setDefaultCommand(
     //   new RunCommand(

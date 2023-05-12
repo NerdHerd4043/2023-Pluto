@@ -61,25 +61,25 @@ public final class Constants {
 
     public static class ArmConstants {
         public static final int lowerArmMotorID = 15;
-        public static final int upperArmMotorID = 1;
+        public static final int upperArmMotorID = 25;
     
-        public static final int lowerArmEncoderID = 0;
-        public static final int upperArmEncoderID = 1;
+        public static final int lowerArmEncoderID = 3;
+        public static final int upperArmEncoderID = 4;
     
         public static final ArmPose[] poses = new ArmPose[] {
-          new ArmPose(0, 0),
-          new ArmPose(5, 5),
-          new ArmPose(15, 20)
+          new ArmPose(284.8, 294.8),
+          new ArmPose(318, 254),
+          new ArmPose(2, 220)
         };
     
         public static class PID {
           public static class Upper{
-            public static final double kP = 0;
+            public static final double kP = 1;
             public static final double kI = 0;
             public static final double kD = 0;
           }
           public static class Lower{
-            public static final double kP = 0;
+            public static final double kP = 1;
             public static final double kI = 0;
             public static final double kD = 0;
           }

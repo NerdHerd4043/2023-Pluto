@@ -50,7 +50,7 @@ public class Arm extends DualProfiledPIDSubsystem {
           PID.Upper.kI,
           PID.Upper.kD,
           // The motion profile constraints
-          new TrapezoidProfile.Constraints(0, 0)),
+          new TrapezoidProfile.Constraints(0.2, 1)),
         
         //PID Controller B for upper arm
         new ProfiledPIDController(
@@ -58,7 +58,7 @@ public class Arm extends DualProfiledPIDSubsystem {
           PID.Lower.kI,
           PID.Lower.kD,
           // The motion profile constraints
-          new TrapezoidProfile.Constraints(0, 0))); 
+          new TrapezoidProfile.Constraints(0.2, 1))); 
 
     lowerArmMotor.restoreFactoryDefaults();
     upperArmMotor.restoreFactoryDefaults();
@@ -129,10 +129,19 @@ public class Arm extends DualProfiledPIDSubsystem {
     ", Upper: " + upperArmEncoder.getAbsolutePosition());
   }
 
+  public CommandBase driveMotors(DoubleSupplier speed, DoubleSupplier speed2){
+    return this.run(() -> {
+      lowerArmMotor.set(speed.getAsDouble() * 0.4);
+      upperArmMotor.set(speed2.getAsDouble() * 0.2);
+    });
+  } 
+
   @Override
   public void useOutput(double outputLower, double outputUpper, State setpointLower, State setpointUpper) {
-    // lowerArmMotor.setVoltage(outputLower);
-    // upperArmMotor.setVoltage(outputUpper);
+    SmartDashboard.putNumber("Lower Output", outputLower);
+    SmartDashboard.putNumber("Upper Output", outputUpper);
+    lowerArmMotor.setVoltage(outputLower);
+    upperArmMotor.setVoltage(outputUpper);
   }
 
   @Override
@@ -148,15 +157,8 @@ public class Arm extends DualProfiledPIDSubsystem {
 
   @Override
   public void periodic() {
-    System.out.println(
-      "Lower: " + lowerArmEncoder.getAbsolutePosition() +
-      ", Upper: " + upperArmEncoder.getAbsolutePosition());
+    // System.out.println(
+      // "Lower: " + lowerArmEncoder.getAbsolutePosition() +
+      // ", Upper: " + upperArmEncoder.getAbsolutePosition());
   }
-
-  public CommandBase driveMotors(DoubleSupplier speed, DoubleSupplier speed2){
-    return this.run(() -> {
-      lowerArmMotor.set(speed.getAsDouble() * 0.4);
-      upperArmMotor.set(speed2.getAsDouble() * 0.2);
-    });
-  } 
 }
