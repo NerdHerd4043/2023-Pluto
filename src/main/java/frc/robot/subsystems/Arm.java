@@ -50,7 +50,7 @@ public class Arm extends DualProfiledPIDSubsystem {
           PID.Upper.kI,
           PID.Upper.kD,
           // The motion profile constraints
-          new TrapezoidProfile.Constraints(0.2, 1)),
+          new TrapezoidProfile.Constraints(0.2, 0.2)),
         
         //PID Controller B for upper arm
         new ProfiledPIDController(
@@ -58,7 +58,7 @@ public class Arm extends DualProfiledPIDSubsystem {
           PID.Lower.kI,
           PID.Lower.kD,
           // The motion profile constraints
-          new TrapezoidProfile.Constraints(0.2, 1))); 
+          new TrapezoidProfile.Constraints(0.2, 0.2))); 
 
     lowerArmMotor.restoreFactoryDefaults();
     upperArmMotor.restoreFactoryDefaults();
@@ -140,8 +140,9 @@ public class Arm extends DualProfiledPIDSubsystem {
   public void useOutput(double outputLower, double outputUpper, State setpointLower, State setpointUpper) {
     SmartDashboard.putNumber("Lower Output", outputLower);
     SmartDashboard.putNumber("Upper Output", outputUpper);
-    lowerArmMotor.setVoltage(outputLower);
-    upperArmMotor.setVoltage(outputUpper);
+    // do the fun things
+    // lowerArmMotor.setVoltage(outputLower);
+    // upperArmMotor.setVoltage(outputUpper);
   }
 
   @Override
@@ -157,6 +158,10 @@ public class Arm extends DualProfiledPIDSubsystem {
 
   @Override
   public void periodic() {
+    super.periodic();
+    double[] goals = this.getGoals();
+    SmartDashboard.putNumber("Lower Goal", goals[0]);
+    SmartDashboard.putNumber("Upper Goal", goals[1]);
     // System.out.println(
       // "Lower: " + lowerArmEncoder.getAbsolutePosition() +
       // ", Upper: " + upperArmEncoder.getAbsolutePosition());

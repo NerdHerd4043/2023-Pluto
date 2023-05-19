@@ -128,6 +128,28 @@ public abstract class DualProfiledPIDSubsystem extends SubsystemBase {
         setGoal(new State(goal, 0), controller);
     }
 
+
+    /**
+     * Returns the goal of inputted controller/ 
+     *
+     * @param controller The desired controller to get the goal for.
+     */
+    public double getGoal(Controller controller) {
+        switch(controller) {
+            case A: return m_controllerA.getGoal().position;
+            case B: return m_controllerB.getGoal().position;
+            default: return 0;
+        }
+    }
+
+    /**
+     * Returns a double array of the goals of the two controllers. Nice 
+     */
+    public double[] getGoals() {
+        double[] out = {m_controllerA.getGoal().position, m_controllerB.getGoal().position};
+        return out;
+    }
+
     /**
      * Returns the measurement of the process variable used by the first ProfiledPIDController.
      *
