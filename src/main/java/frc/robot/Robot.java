@@ -70,6 +70,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+    m_robotContainer.disableArm();
     m_robotContainer.getBreakCommand().schedule();
   }
 
@@ -106,6 +107,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
+    m_robotContainer.enableArm();
     m_robotContainer.getCoastCommand().schedule();
   }
 

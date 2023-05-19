@@ -74,12 +74,12 @@ public final class Constants {
     
         public static class PID {
           public static class Upper{
-            public static final double kP = 1;
+            public static final double kP = 0.3;
             public static final double kI = 0;
             public static final double kD = 0;
           }
           public static class Lower{
-            public static final double kP = 1;
+            public static final double kP = 0.3;
             public static final double kI = 0;
             public static final double kD = 0;
           }

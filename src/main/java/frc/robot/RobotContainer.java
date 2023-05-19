@@ -145,6 +145,14 @@ public class RobotContainer {
     return commandChooser.getSelected();
   }
 
+  public void enableArm() {
+    arm.enable();
+  }
+
+  public void disableArm() {
+    arm.disable();
+  }
+
   public void updatePIDValues() {
     pidController.setP(SmartDashboard.getNumber("kP", 0));
     pidController.setI(SmartDashboard.getNumber("kI", 0));

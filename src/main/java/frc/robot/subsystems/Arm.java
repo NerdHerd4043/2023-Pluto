@@ -108,7 +108,7 @@ public class Arm extends DualProfiledPIDSubsystem {
   }
 
   public CommandBase adjustCommand(DoubleSupplier input) {
-    return this.run(() -> this.adjustPosition(input.getAsDouble() / 100));
+    return this.run(() -> this.adjustPosition(input.getAsDouble() / 50));
   }
 
   public CommandBase driveLowerMotor(DoubleSupplier speed){
@@ -119,8 +119,28 @@ public class Arm extends DualProfiledPIDSubsystem {
     return this.run(() -> upperArmMotor.set(speed.getAsDouble() * 0.3));
   }
 
+  private double lerp(double a, double b, double f) {
+    return (a * (1.0 - f)) + (b * f);
+  }
+
   public void updateGoals() {
-    setGoals(poses[(int)pose].lower(), poses[(int)pose].upper());
+    int lowerBound = Math.min((int) Math.floor(pose), poses.length - 2);
+    int upperBound = Math.min((int) Math.ceil(pose), poses.length - 1);
+
+    double fraction = pose - lowerBound;
+    // setGoals(poses[(int)pose].lower(), poses[(int)pose].upper());
+
+      double upperGoal = lerp(
+        poses[lowerBound].upper(), 
+        poses[upperBound].upper(), 
+        fraction);
+
+      double lowerGoal = lerp(
+        poses[lowerBound].lower(), 
+        poses[upperBound].lower(), 
+        fraction);
+
+    setGoals(lowerGoal,upperGoal);
   }
 
   public void printEncoders() {
@@ -140,7 +160,8 @@ public class Arm extends DualProfiledPIDSubsystem {
   public void useOutput(double outputLower, double outputUpper, State setpointLower, State setpointUpper) {
     SmartDashboard.putNumber("Lower Output", outputLower);
     SmartDashboard.putNumber("Upper Output", outputUpper);
-    // do the fun things
+    // do the fun thing
+    System.out.println("3.141592653589793238462643383279");
     // lowerArmMotor.setVoltage(outputLower);
     // upperArmMotor.setVoltage(outputUpper);
   }
