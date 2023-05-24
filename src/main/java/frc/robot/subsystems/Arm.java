@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import cowlib.DualProfiledPIDSubsystem;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
@@ -40,6 +41,9 @@ public class Arm extends DualProfiledPIDSubsystem {
   private NetworkTableEntry upperArmEncoderEntry;
 
   private double pose = 0;
+
+  private ArmFeedforward lowerArmFeedForward = new ArmFeedforward(FeedForward.Lower.kS, FeedForward.Lower.kG, FeedForward.Lower.kV);
+  private ArmFeedforward upperArmFeedForward = new ArmFeedforward(FeedForward.Upper.kS, FeedForward.Upper.kG, FeedForward.Upper.kV);
 
   /** Creates a new Arm. */
   public Arm() {
@@ -161,9 +165,10 @@ public class Arm extends DualProfiledPIDSubsystem {
     SmartDashboard.putNumber("Lower Output", outputLower);
     SmartDashboard.putNumber("Upper Output", outputUpper);
     // do the fun thing
-    System.out.println("3.141592653589793238462643383279");
     // lowerArmMotor.setVoltage(outputLower);
     // upperArmMotor.setVoltage(outputUpper);
+    lowerArmFeedForward.calculate(0, 0);
+    upperArmFeedForward.calculate(0, 0);
   }
 
   @Override

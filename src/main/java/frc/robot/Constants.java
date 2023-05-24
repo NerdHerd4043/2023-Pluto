@@ -87,14 +87,14 @@ public final class Constants {
     
         public static class FeedForward {
           public static class Upper{
-            public static final double ks = 0;
-            public static final double kv = 0;
-            public static final double ka = 0;
+            public static final double kS = 0;
+            public static final double kG = 0;
+            public static final double kV = 0;
           }
           public static class Lower{
-            public static final double ks = 0;
-            public static final double kv = 0;
-            public static final double ka = 0;
+            public static final double kS = 0;
+            public static final double kG = 0;
+            public static final double kV = 0;
           }
         }
       }
