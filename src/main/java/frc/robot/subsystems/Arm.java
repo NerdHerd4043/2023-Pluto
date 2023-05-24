@@ -169,9 +169,14 @@ public class Arm extends DualProfiledPIDSubsystem {
     // lowerArmMotor.setVoltage(outputLower);
     // upperArmMotor.setVoltage(outputUpper);
 
-    // feedforward driving motor????
+    // feedforward driving motor??
     // lowerArmMotor.setVoltage(lowerArmFeedForward.calculate(setpointLower.position, setpointLower.velocity));
     // upperArmMotor.setVoltage(upperArmFeedForward.calculate(setpointUpper.position, setpointUpper.velocity));
+
+    // both driving motor???????
+    // lowerArmMotor.setVoltage(outputLower + lowerArmFeedForward.calculate(setpointLower.position, setpointLower.velocity));
+    // upperArmMotor.setVoltage(outputUpper + upperArmFeedForward.calculate(setpointUpper.position, setpointUpper.velocity));
+
   }
 
   @Override
