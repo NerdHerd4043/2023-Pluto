@@ -164,11 +164,14 @@ public class Arm extends DualProfiledPIDSubsystem {
   public void useOutput(double outputLower, double outputUpper, State setpointLower, State setpointUpper) {
     SmartDashboard.putNumber("Lower Output", outputLower);
     SmartDashboard.putNumber("Upper Output", outputUpper);
-    // do the fun thing
+
+    // PID driving motor
     // lowerArmMotor.setVoltage(outputLower);
     // upperArmMotor.setVoltage(outputUpper);
-    lowerArmFeedForward.calculate(0, 0);
-    upperArmFeedForward.calculate(0, 0);
+
+    // feedforward driving motor????
+    // lowerArmMotor.setVoltage(lowerArmFeedForward.calculate(setpointLower.position, setpointLower.velocity));
+    // upperArmMotor.setVoltage(upperArmFeedForward.calculate(setpointUpper.position, setpointUpper.velocity));
   }
 
   @Override
