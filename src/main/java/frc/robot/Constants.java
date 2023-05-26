@@ -67,19 +67,22 @@ public final class Constants {
         public static final int upperArmEncoderID = 4;
     
         public static final ArmPose[] poses = new ArmPose[] {
-          new ArmPose(284.8, 294.8),
-          new ArmPose(318, 254),
-          new ArmPose(2, 220)
+          // new ArmPose(284.8, 294.8),
+          // new ArmPose(318, 254),
+          // new ArmPose(2, 220)
+          new ArmPose(0, 0),
+          new ArmPose(75, -70),
+          new ArmPose(100, -100)
         };
     
         public static class PID {
           public static class Upper{
-            public static final double kP = 0.3;
+            public static final double kP = 0.2;
             public static final double kI = 0;
             public static final double kD = 0;
           }
           public static class Lower{
-            public static final double kP = 0.3;
+            public static final double kP = 0.2;
             public static final double kI = 0;
             public static final double kD = 0;
           }
