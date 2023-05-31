@@ -153,6 +153,10 @@ public class RobotContainer {
     arm.disable();
   }
 
+  public void resetEncoders() {
+    arm.resetEncoders();
+  }
+
   public void updatePIDValues() {
     pidController.setP(SmartDashboard.getNumber("kP", 0));
     pidController.setI(SmartDashboard.getNumber("kI", 0));

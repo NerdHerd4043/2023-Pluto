@@ -107,6 +107,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
+    m_robotContainer.resetEncoders();
     m_robotContainer.enableArm();
     m_robotContainer.getCoastCommand().schedule();
   }

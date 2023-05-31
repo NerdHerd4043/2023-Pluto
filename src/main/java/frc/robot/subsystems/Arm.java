@@ -160,18 +160,23 @@ public class Arm extends DualProfiledPIDSubsystem {
     });
   } 
 
+  public void resetEncoders() {
+    lowerArmEncoder.setPosition(0);
+    upperArmEncoder.setPosition(0);
+  }
+
   @Override
   public void useOutput(double outputLower, double outputUpper, State setpointLower, State setpointUpper) {
     SmartDashboard.putNumber("Lower Output", outputLower);
     SmartDashboard.putNumber("Upper Output", outputUpper);
 
     // PID driving motor
-    lowerArmMotor.setVoltage(outputLower * 0.5);
-    upperArmMotor.setVoltage(outputUpper * 0.5);
+    // lowerArmMotor.setVoltage(outputLower * 0.5);
+    // upperArmMotor.setVoltage(outputUpper * 0.5);
 
     // feedforward driving motor??
-    // lowerArmMotor.setVoltage(lowerArmFeedForward.calculate(setpointLower.position, setpointLower.velocity));
-    // upperArmMotor.setVoltage(upperArmFeedForward.calculate(setpointUpper.position, setpointUpper.velocity));
+    lowerArmMotor.setVoltage(lowerArmFeedForward.calculate(setpointLower.position, setpointLower.velocity));
+    upperArmMotor.setVoltage(upperArmFeedForward.calculate(setpointUpper.position, setpointUpper.velocity));
 
     // both driving motor???????
     // lowerArmMotor.setVoltage(outputLower + lowerArmFeedForward.calculate(setpointLower.position, setpointLower.velocity));
