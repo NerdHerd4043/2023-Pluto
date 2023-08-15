@@ -82,9 +82,9 @@ public final class Constants {
             public static final double kD = 0;
           }
           public static class Lower{
-            public static final double kP = 0.2;
+            public static final double kP = 0.35;
             public static final double kI = 0;
-            public static final double kD = 0;
+            public static final double kD = 0.005;
           }
         }
     

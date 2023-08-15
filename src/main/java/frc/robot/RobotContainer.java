@@ -19,6 +19,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.commands.armyArm.LonelyBack;
+import frc.robot.commands.armyArm.LonelyForward;
+import frc.robot.commands.armyArm.LonelyProfBack;
+import frc.robot.commands.armyArm.LonelyProfForward;
 import frc.robot.commands.auto.BalanceOnPlatform;
 import frc.robot.commands.autoCommands.*;
 import frc.robot.commands.hatchlatch.Clap;
@@ -26,6 +30,8 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.CargoIntake;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.HatchLatch;
+import frc.robot.subsystems.LonelyPID;
+import frc.robot.subsystems.LonelyProfPID;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -42,7 +48,8 @@ public class RobotContainer {
   private final Drivetrain drivetrain = new Drivetrain();
   private final CargoIntake cargoIntake = new CargoIntake();
   private final HatchLatch hatchLatch = new HatchLatch();
-  private final Arm arm = new Arm();
+  // private final Arm arm = new Arm();
+  private final LonelyProfPID pid = new LonelyProfPID();
 
   public AHRS gyro = new AHRS(SPI.Port.kMXP);
 
@@ -61,6 +68,8 @@ public class RobotContainer {
     () -> Math.abs(limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0]));
 
   private final BalanceOnPlatform balanceOnPlatform = new BalanceOnPlatform(drivetrain, pidController, gyro);
+
+  // private final LonelyPIDCommand armPID = new LonelyPIDCommand();
 
   SendableChooser<Command> commandChooser = new SendableChooser<>();
 
@@ -96,10 +105,10 @@ public class RobotContainer {
     //     () -> driveStick.getLeftY(),
     //     () -> driveStick.getRightY()));
 
-    arm.setDefaultCommand(
-      arm.adjustCommand(
-        () -> driveStick.getRightTriggerAxis() - driveStick.getLeftTriggerAxis()
-      ));
+    // arm.setDefaultCommand(
+    //   arm.adjustCommand(
+    //     () -> driveStick.getRightTriggerAxis() - driveStick.getLeftTriggerAxis()
+    //   ));
 
     // cargoIntake.setDefaultCommand(
     //   new RunCommand(
@@ -118,9 +127,12 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    driveStick.b().onTrue(new InstantCommand(arm::nextPose, arm));
-    driveStick.a().onTrue(new InstantCommand(arm::previousPose, arm));
-    driveStick.y().onTrue(new InstantCommand(arm::printEncoders, arm));
+    driveStick.a().onTrue(new LonelyProfForward(pid));
+    driveStick.b().onTrue(new LonelyProfBack(pid));
+
+    // driveStick.b().onTrue(new InstantCommand(arm::nextPose, arm));
+    // driveStick.a().onTrue(new InstantCommand(arm::previousPose, arm));
+    // driveStick.y().onTrue(new InstantCommand(arm::printEncoders, arm));
 
 
     // new JoystickButton(driveStick, Button.kX.value).onTrue(new InstantCommand(hatchLatch::toggleLatch, hatchLatch));
@@ -146,15 +158,21 @@ public class RobotContainer {
   }
 
   public void enableArm() {
-    arm.enable();
+    // arm.enable();
+    // pid.setSetpoint(0);
+    pid.getController().reset(0,0);;;;;;;;;;;;;;;;;;;;;;;;
+    pid.setGoal(0);
+    pid.enable();
   }
 
   public void disableArm() {
-    arm.disable();
+    // arm.disable();
+    // pid.setSetpoint(0);
+    pid.disable();
   }
 
   public void resetEncoders() {
-    arm.resetEncoders();
+    // arm.resetEncoders();
   }
 
   public void updatePIDValues() {
