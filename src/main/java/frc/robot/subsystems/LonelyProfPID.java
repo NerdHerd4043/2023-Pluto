@@ -17,35 +17,41 @@ import frc.robot.Constants.ArmConstants.PID;
 
 public class LonelyProfPID extends ProfiledPIDSubsystem {
 
-  private CANSparkMax lowerArmMotor = new CANSparkMax(ArmConstants.lowerArmMotorID, MotorType.kBrushless);
-  private WPI_CANCoder lowerArmEncoder = new WPI_CANCoder(ArmConstants.lowerArmEncoderID);
+  private CANSparkMax upperArmMotor = new CANSparkMax(ArmConstants.upperArmMotorID, MotorType.kBrushless);
+  private WPI_CANCoder upperArmEncoder = new WPI_CANCoder(ArmConstants.upperArmEncoderID);
   /** Creates a new LonelyProfPID. */
   public LonelyProfPID() {
     super(
         // The ProfiledPIDController used by the subsystem
         new ProfiledPIDController(
-          PID.Lower.kP,
-          PID.Lower.kI,
-          PID.Lower.kD,
-          new TrapezoidProfile.Constraints(150 , 150)));
+          PID.Upper.kP,
+          PID.Upper.kI,
+          PID.Upper.kD,
+          new TrapezoidProfile.Constraints(50 , 50)));
   }
 
   @Override
   public void useOutput(double output, TrapezoidProfile.State setpoint) {
-    SmartDashboard.putNumber("Encoder Value", getEncoder());
     SmartDashboard.putNumber("Output", output);
     SmartDashboard.putNumber("Setpoint", setpoint.position);
-    SmartDashboard.putNumber("Setpoint Velocity", setpoint.velocity);
-    lowerArmMotor.setVoltage(-output);  
+    // SmartDashboard.putNumber("Setpoint Velocity", setpoint.velocity);
+    upperArmMotor.setVoltage(output);  
   }
 
   public double getEncoder(){
-    return lowerArmEncoder.getAbsolutePosition();
+    return upperArmEncoder.getAbsolutePosition();
   }
 
   @Override
   public double getMeasurement() {
     // Return the process variable measurement here
     return getEncoder();
+  }
+  
+  @Override
+  public void periodic() {
+    super.periodic();
+
+    SmartDashboard.putNumber("Encoder Value", getEncoder());
   }
 }
