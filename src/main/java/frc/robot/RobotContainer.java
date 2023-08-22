@@ -161,7 +161,7 @@ public class RobotContainer {
     // arm.enable();
     // pid.setSetpoint(0);
     pid.getController().reset(0,0);;;;;;;;;;;;;;;;;;;;;;;;
-    pid.setGoal(0);
+    pid.setGoal(20);
     pid.enable();
   }
 

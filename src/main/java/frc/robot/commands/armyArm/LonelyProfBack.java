@@ -24,7 +24,7 @@ public class LonelyProfBack extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    pid.setGoal(0.3);
+    pid.setGoal(20);
     pid.enable();
   }
 }

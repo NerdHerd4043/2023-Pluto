@@ -8,17 +8,22 @@ import com.ctre.phoenix.sensors.WPI_CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ArmConstants.PID;
+import frc.robot.Constants.ArmConstants.FeedForward.Upper;
+import frc.robot.Constants.ArmConstants.FeedForward;;
 
 public class LonelyProfPID extends ProfiledPIDSubsystem {
 
   private CANSparkMax upperArmMotor = new CANSparkMax(ArmConstants.upperArmMotorID, MotorType.kBrushless);
   private WPI_CANCoder upperArmEncoder = new WPI_CANCoder(ArmConstants.upperArmEncoderID);
+  private ArmFeedforward feedforward = new ArmFeedforward(Upper.kS, Upper.kG, Upper.kV);
+
   /** Creates a new LonelyProfPID. */
   public LonelyProfPID() {
     super(
@@ -32,10 +37,14 @@ public class LonelyProfPID extends ProfiledPIDSubsystem {
 
   @Override
   public void useOutput(double output, TrapezoidProfile.State setpoint) {
-    SmartDashboard.putNumber("Output", output);
+    double ff = feedforward.calculate(setpoint.position, setpoint.velocity);
+    // SmartDashboard.putNumber("Output", output);
     SmartDashboard.putNumber("Setpoint", setpoint.position);
+    // SmartDashboard.putNumber("Fed Firward", feedforward.calculate(setpoint.position, setpoint.velocity));
+    SmartDashboard.putNumberArray("PID, FF, and Combo", new double[]{output, ff, output + ff});
     // SmartDashboard.putNumber("Setpoint Velocity", setpoint.velocity);
-    upperArmMotor.setVoltage(output);  
+    upperArmMotor.setVoltage(output + ff);  
+    // upperArmMotor.setVoltage(feedforward.calculate(setpoint.position, setpoint.velocity));
   }
 
   public double getEncoder(){
@@ -51,7 +60,6 @@ public class LonelyProfPID extends ProfiledPIDSubsystem {
   @Override
   public void periodic() {
     super.periodic();
-
     SmartDashboard.putNumber("Encoder Value", getEncoder());
   }
 }

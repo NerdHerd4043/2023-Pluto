@@ -77,12 +77,12 @@ public final class Constants {
     
         public static class PID {
           public static class Upper{
-            public static final double kP = 0.2;
-            public static final double kI = 0;
-            public static final double kD = 0.005;
+            public static final double kP = 0.23;
+            public static final double kI = 0.000;
+            public static final double kD = 0.008;
           }
           public static class Lower{
-            public static final double kP = 0.35;
+            public static final double kP = 0.2;
             public static final double kI = 0;
             public static final double kD = 0.005;
           }
@@ -90,9 +90,9 @@ public final class Constants {
     
         public static class FeedForward {
           public static class Upper{
-            public static final double kS = 0;
+            public static final double kS = 1;
             public static final double kG = 0;
-            public static final double kV = 0;
+            public static final double kV = 0.07;
           }
           public static class Lower{
             public static final double kS = 0;
@@ -101,5 +101,7 @@ public final class Constants {
           }
         }
       }
+
+      //works for 45 degrees: p=0.5, d=0.005, g=1, v=0.05
     
 }
