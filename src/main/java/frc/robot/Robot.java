@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import org.json.JSONObject;
+
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -54,17 +56,30 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    SmartDashboard.putNumber("X Position", limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0]);
+    // SmartDashboard.putNumber("X Position", limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0]);
     
-    double input = limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0];
+    // double input = limelightTable.getEntry("botpose").getDoubleArray(new Double[0])[0];
 
-    smoothed += (input - smoothed) / AutoConstants.smoothConstant;
-    SmartDashboard.putNumber("Smoothed", smoothed);
-    SmartDashboard.putNumber("Input", input);
+    // smoothed += (input - smoothed) / AutoConstants.smoothConstant;
+    // SmartDashboard.putNumber("Smoothed", smoothed);
+    // SmartDashboard.putNumber("Input", input);
 
-    m_robotContainer.updatePIDValues();
+    // m_robotContainer.updatePIDValues();
 
-    SmartDashboard.putNumber("Roll", m_robotContainer.gyro.getRoll());
+    // SmartDashboard.putNumber("Roll", m_robotContainer.gyro.getRoll());
+
+    String raw = NetworkTableInstance.getDefault().getTable("limelight").getEntry("json").getString("{}");
+    var obj = new JSONObject(raw);
+    var results = obj.getJSONObject("Results");
+    var retro = results.optJSONArray("Retro");
+    var length = retro.length();
+
+    for(int i = 0; i < length; i++){
+      var item = retro.getJSONObject(i);
+      var itemY = item.getDouble("ty");
+      System.out.println(i + ": " + itemY);
+    }
+    System.out.println();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
