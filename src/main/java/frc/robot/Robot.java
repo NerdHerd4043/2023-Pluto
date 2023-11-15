@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import org.json.JSONObject;
 
 import edu.wpi.first.networktables.NetworkTable;
@@ -70,16 +73,38 @@ public class Robot extends TimedRobot {
 
     String raw = NetworkTableInstance.getDefault().getTable("limelight").getEntry("json").getString("{}");
     var obj = new JSONObject(raw);
-    var results = obj.getJSONObject("Results");
+    var results = obj.optJSONObject("Results");
     var retro = results.optJSONArray("Retro");
     var length = retro.length();
+
+    ArrayList<Double> arr = new ArrayList<Double>();
+    double diff1;
+    double diff2;
+    boolean blueAlliance;
 
     for(int i = 0; i < length; i++){
       var item = retro.getJSONObject(i);
       var itemY = item.getDouble("ty");
-      System.out.println(i + ": " + itemY);
+      arr.add(itemY);
     }
-    System.out.println();
+
+    if(length < 3){
+      SmartDashboard.putString("Alliance", "pneumonoultramicroscopicsilicovolcanoconiosis");
+    }
+    else{
+      Collections.sort(arr);
+      diff1 = Math.abs(arr.get(0)- arr.get(1));
+      diff2 = Math.abs(arr.get(arr.size() - 2) - arr.get(arr.size() - 1));
+      blueAlliance = diff1 > diff2;
+
+      if(blueAlliance){
+        SmartDashboard.putString("Alliance", "I'M BLUE DA BU DE DA BU DIE");
+      }
+      else{
+        SmartDashboard.putString("Alliance", "RED");
+      }
+    }
+    arr.clear();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
